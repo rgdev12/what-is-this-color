@@ -4,33 +4,35 @@ import Card from '../components/Card.astro';
 ---
 
 <Layout title="What Is This Color">
-	<main class="container mx-auto">
-		<article class="my-20 text-lg">
-			<h1 class="text-4xl font-bold text-slate-600">Cuál es este color</h1>
-			<p class="mt- text-slate-500">Elige alguna de las 3 opciones que necesites:</p>
+	<main class="container mx-auto px-5">
+		<!-- Sección presentación de opciones -->
+		<section>
+			<article class="my-20 text-lg">
+				<h1 class="text-4xl font-bold text-slate-600">Cuál es este color</h1>
+				<p class="text-slate-500">Elige alguna de las 3 opciones que necesites:</p>
+	
+				<div>
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+						<Card
+							title="Seleccionar color de una imagen"
+							description="Obten el color de alguna sección en concreto de la imagen que tu cargues."
+						/>
+						<Card
+							title="Color Hexadecimal o RGB"
+							description="Busca un color y obten su valor hexadecimal o RGB para utilizarlo como gustes."
+						/>
+						<Card
+							title="Paleta de colores"
+							description="Si tienes un color en mente y quieres ver una paleta de colores basada en ese color, puedes hacerlo."
+						/>
+					</div>
+				</div>
+			</article>
+		</section>
 
-			<div>
-
-			</div>
-
-			<ul class="text-slate-500 mt-3">
-				<li>
-					<p>
-						<span class="font-bold">Seleccionar color de una imagen:</span> Obten el color de alguna sección en concreto de la imagen que tu cargues.
-					</p>
-				</li>
-				<li>
-					<p>
-						<span class="font-bold">Color Hexadecimal o RGB:</span> Busca un color y obten su valor hexadecimal o RGB para utilizarlo como gustes. O si tienes un color hexadecimal o RGB y quieres saber
-						como es, puedes hacerlo.
-					</p>
-				</li>
-				<li>
-					<p>
-						<span class="font-bold">Paleta de colores:</span> Si tienes un color en mente y quieres ver una paleta de colores basada en ese color, puedes hacerlo.
-					</p>
-				</li>
-			</ul>
-		</article>
+		<!-- Sección Tab con las 3 opciones -->
+		<section>
+			
+		</section>
 	</main>
 </Layout>

@@ -1,45 +1,44 @@
 ---
 interface Props {
 	title: string;
-	body: string;
-	href: string;
+	description: string;
 }
 
-const { href, title, body } = Astro.props;
+const { title, description } = Astro.props;
 ---
 
 <li class="link-card">
-	<a href={href}>
-		<h2>
+	<div>
+		<h2 class="font-bold text-slate-600">
 			{title}
 			<span>&rarr;</span>
 		</h2>
 		<p>
-			{body}
+			{description}
 		</p>
-	</a>
+	</div>
 </li>
 <style>
 	.link-card {
+		drop-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+		border: 1px solid #E5E7EB;
 		list-style: none;
 		display: flex;
 		padding: 1px;
-		background-color: #23262d;
+		background-color: #ffffff;
 		background-image: none;
 		background-size: 400%;
 		border-radius: 7px;
 		background-position: 100%;
 		transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 	}
-	.link-card > a {
+	.link-card > div {
 		width: 100%;
 		text-decoration: none;
 		line-height: 1.4;
 		padding: calc(1.5rem - 1px);
 		border-radius: 8px;
-		color: white;
-		background-color: #23262d;
+		background-color: #ffffff;
 		opacity: 0.8;
 	}
 	h2 {

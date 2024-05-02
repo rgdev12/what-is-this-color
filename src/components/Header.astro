@@ -1,15 +1,21 @@
 ---
 ---
 
-<header class="w-full drop-shadow-lg border-2">
+<header class="w-full drop-shadow-sm border-2 bg-white">
   <div class="container mx-auto flex justify-between items-center p-3">
     <div class="cursor-pointer">
       <img class="w-28" src="src/assets/img/logo.png" alt="Logo IMG">
     </div>
 
     <!-- ícono para cambiar entre modo claro y oscuro -->
-    <div class="drop-shadow-sm">
-      <img class="w-10" src="src/assets/icons/SunHigh.svg" alt="Sun Icon" />
+    <button class="drop-shadow-sm">
+      <img class="w-8 hover-change-colo-svg" src="src/assets/icons/SunHigh.svg" alt="Sun Icon" />
     </button>
   </div>
 </header>
+
+<style>
+.hover-change-colo-svg:hover {
+  filter: invert(63%) sepia(64%) saturate(527%) hue-rotate(169deg) brightness(101%) contrast(88%);
+}
+</style>
