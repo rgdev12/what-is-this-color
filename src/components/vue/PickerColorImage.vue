@@ -17,7 +17,7 @@
       </div>
 
       <div class="mt-5 w-full">
-        <img @click="test" src="" id="show-image">
+        <img @click="getColor" src="" id="show-image" class="cursor-crosshair">
       </div>
     </div>
   </div>
@@ -38,10 +38,6 @@ let toastMessage = ref('');
 let showToast = ref(false);
 
 let isDragging = ref(false);
-
-function test() {
-  console.log('test');
-}
 
 function openFile() {
   const input = document.getElementById('upload-image');
@@ -100,6 +96,42 @@ function showImage(file: File) {
     image.src = e.target?.result as string;
   };
   reader.readAsDataURL(file);
+}
+
+function getColor(event: any) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+  const img = document.getElementById("show-image") as HTMLImageElement;
+
+  canvas.width = img.width;
+  canvas.height = img.height;
+  ctx.drawImage(img, 0, 0, img.width, img.height);
+
+  const x = event.offsetX; // Coordenada X relativa al canvas
+  const y = event.offsetY; // Coordenada Y relativa al canvas
+  const pixel = ctx.getImageData(x, y, 1, 1).data;
+
+  // convertimos el color a hexadecimal
+  const hexColor = rgbToHex(pixel[0], pixel[1], pixel[2]);
+  console.log(`Color HEX en (${x}, ${y}): ${hexColor}`);
+
+  const color = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+  console.log(`Color RGB en (${x}, ${y}): ${color}`);
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+  const validR = Math.min(255, Math.max(0, r));
+  const validG = Math.min(255, Math.max(0, g));
+  const validB = Math.min(255, Math.max(0, b));
+
+  // Convierte cada componente a su valor hexadecimal
+  const hexR = validR.toString(16).padStart(2, "0");
+  const hexG = validG.toString(16).padStart(2, "0");
+  const hexB = validB.toString(16).padStart(2, "0");
+
+  // Combina los componentes hexadecimales para formar el código completo
+  const hexColor = `#${hexR}${hexG}${hexB}`;
+  return hexColor.toUpperCase();
 }
 
 function closeToast() {
