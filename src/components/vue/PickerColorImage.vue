@@ -16,8 +16,16 @@
         </div>
       </div>
 
-      <div class="mt-5 w-full">
+      <!-- <div class="mt-5 w-full">
         <img @click="getColor" src="" id="show-image" class="cursor-crosshair">
+      </div> -->
+
+      <div class="mt-5 w-full">
+        <section class="color-img cursor-crosshair relative">
+          <img ref="uploadImage" src="src/assets/img/test-image.jpg" alt="upload" class="w-full" id="show-image" @mousemove="moveLens">
+          <div ref="lens" id="magnifier-lens-img" class="magnifier-lens absolute w-[150px] h-[100px] border border-black hidden"
+            @click="getColor" @mousemove="moveLens" @mouseout="removeStyle"></div>
+        </section>
       </div>
     </div>
   </div>
@@ -27,17 +35,12 @@
 import { ref } from 'vue';
 import Toast from './Toast.vue';
 
-declare global {
-  class EyeDropper {
-    open(): Promise<{ sRGBHex: string }>;
-    close(): void;
-  }
-}
-
 let toastMessage = ref('');
 let showToast = ref(false);
-
 let isDragging = ref(false);
+
+const uploadImage = ref(document.createElement('img'));
+const lens = ref(document.createElement('div'));
 
 function openFile() {
   const input = document.getElementById('upload-image');
@@ -91,11 +94,10 @@ function drop(event: any) {
 
 function showImage(file: File) {
   const image = document.getElementById('show-image') as HTMLImageElement;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    image.src = e.target?.result as string;
-  };
-  reader.readAsDataURL(file);
+  if (file) {
+    const imageUrl = URL.createObjectURL(file);
+    image.src = imageUrl;
+  }
 }
 
 function getColor(event: any) {
@@ -132,6 +134,46 @@ function rgbToHex(r: number, g: number, b: number): string {
   // Combina los componentes hexadecimales para formar el código completo
   const hexColor = `#${hexR}${hexG}${hexB}`;
   return hexColor.toUpperCase();
+}
+
+const moveLens = (event: any) => {
+  lens.value.classList.remove('hidden');
+  let x, y, cx, cy;
+
+  const uploadImageReact = uploadImage.value.getBoundingClientRect();
+  x = event.x - uploadImageReact.left - lens.value.offsetWidth / 2;
+  y = event.y - uploadImageReact.top - lens.value.offsetHeight / 2;
+
+  let max_xpos = (uploadImageReact.width - lens.value.offsetWidth) + 75;
+  let max_ypos = (uploadImageReact.height - lens.value.offsetHeight) + 45;
+  // console.log(max_xpos, max_ypos, x, y);
+
+  if (x > max_xpos) x = max_xpos;
+  if (x < -60) x = -60;
+
+  if (y > max_ypos) y = max_ypos;
+  if (y < -55) y = -55;
+
+  lens.value.style.cssText = `top: ${y}px; left: ${x}px;`;
+
+  // calculamos la imagen magnificada para mostrarla en el lens
+  cx = (lens.value.offsetWidth) / uploadImage.value.offsetWidth * 10;
+  cy = (lens.value.offsetHeight) / uploadImage.value.offsetHeight * 10;
+
+  let xcx = x * cx + 100;
+  xcx = xcx < 0 ? xcx * (-1) : -xcx;
+
+  let ycy = y * cy + 100;
+  ycy = ycy < 0 ? ycy * (-1) : -ycy;
+
+  lens.value.style.backgroundImage = `url('${uploadImage.value.src}')`;
+  lens.value.style.backgroundSize = `${uploadImage.value.offsetWidth * cx - 30}px ${uploadImage.value.offsetHeight * cy + 20}px`;
+  lens.value.style.backgroundPosition = `${xcx}px ${ycy}px`;
+  lens.value.style.backgroundRepeat = 'no-repeat';
+}
+
+const removeStyle = () => {
+  lens.value.style.display = 'none';
 }
 
 function closeToast() {
