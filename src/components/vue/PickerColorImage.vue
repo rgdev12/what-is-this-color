@@ -22,7 +22,7 @@
 
       <div class="mt-5 w-full">
         <section class="color-img cursor-crosshair relative">
-          <img ref="uploadImage" src="src/assets/img/test-image.jpg" alt="upload" class="w-full" id="show-image" @mousemove="moveLens">
+          <img ref="uploadImage" src="src/assets/img/test-image.jpg" alt="upload" class="w-full" id="show-image" @mousemove="moveLens" @mouseover="removeHidden">
           <div ref="lens" id="magnifier-lens-img" class="magnifier-lens absolute w-[150px] h-[100px] border border-black hidden"
             @click="getColor" @mousemove="moveLens" @mouseout="removeStyle"></div>
         </section>
@@ -137,22 +137,21 @@ function rgbToHex(r: number, g: number, b: number): string {
 }
 
 const moveLens = (event: any) => {
-  lens.value.classList.remove('hidden');
   let x, y, cx, cy;
 
   const uploadImageReact = uploadImage.value.getBoundingClientRect();
   x = event.x - uploadImageReact.left - lens.value.offsetWidth / 2;
   y = event.y - uploadImageReact.top - lens.value.offsetHeight / 2;
 
-  let max_xpos = (uploadImageReact.width - lens.value.offsetWidth) + 75;
-  let max_ypos = (uploadImageReact.height - lens.value.offsetHeight) + 45;
+  let max_xpos = (uploadImageReact.width - lens.value.offsetWidth) + 77;
+  let max_ypos = (uploadImageReact.height - lens.value.offsetHeight) + 65;
   // console.log(max_xpos, max_ypos, x, y);
 
   if (x > max_xpos) x = max_xpos;
-  if (x < -60) x = -60;
+  if (x < -56) x = -56;
 
   if (y > max_ypos) y = max_ypos;
-  if (y < -55) y = -55;
+  if (y < -45) y = -45;
 
   lens.value.style.cssText = `top: ${y}px; left: ${x}px;`;
 
@@ -170,10 +169,17 @@ const moveLens = (event: any) => {
   lens.value.style.backgroundSize = `${uploadImage.value.offsetWidth * cx - 30}px ${uploadImage.value.offsetHeight * cy + 20}px`;
   lens.value.style.backgroundPosition = `${xcx}px ${ycy}px`;
   lens.value.style.backgroundRepeat = 'no-repeat';
+
+  // dibujamos un punto en el centro del lens
+  lens.value.innerHTML = '<div class="magnifier-dot"></div>';
 }
 
 const removeStyle = () => {
   lens.value.style.display = 'none';
+}
+
+const removeHidden = () => {
+  lens.value.classList.remove('hidden');
 }
 
 function closeToast() {
@@ -181,3 +187,17 @@ function closeToast() {
 }
 
 </script>
+
+
+<style>
+.magnifier-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: red;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
