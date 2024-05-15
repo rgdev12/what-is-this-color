@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white rounded-md py-10 px-2 sm:px-0 flex justify-center items-center">
     <Toast v-if="showToast" :message="toastMessage" @close="closeToast"/>
-    <div class="max-w-96 sm:max-w-[570px] w-full border-2 p-3 rounded-md">
+    <section class="max-w-96 sm:max-w-[570px] w-full border-2 p-3 rounded-md">
       <div class="rounded-sm border-2 border-dashed cursor-pointer"
            @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="drop" @click="openFile">
         <div v-if="!isDragging" class="relative w-full h-32 flex justify-center items-center flex-col">
@@ -27,7 +27,16 @@
           <div ref="lens" id="magnifier-lens-img" class="magnifier-lens absolute w-[150px] h-[100px] border border-black bg-white hidden"></div>
         </section>
       </div>
-    </div>
+
+      <div class="mt-6">
+        <div ref="showColor" class="color-show w-full h-8 rounded-sm bg-gray-200 cursor-pointer flex justify-center items-center" @click="copyColor">
+          <img class="w-5 hover-change-colo-svg" src="src/assets/icons/clipboard.svg" alt="Sun Icon" />
+        </div>
+        <p class="text-sm text-center mt-1 text-slate-500">
+          {{ !textColor ? 'Haz clic en la imagen para esoger un color' : textColor }}
+        </p>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -38,9 +47,11 @@ import Toast from './Toast.vue';
 let toastMessage = ref('');
 let showToast = ref(false);
 let isDragging = ref(false);
+let textColor = ref('');
 
 const uploadImage = ref(document.createElement('img'));
 const lens = ref(document.createElement('div'));
+const showColor = ref(document.createElement('div'));
 
 function openFile() {
   const input = document.getElementById('upload-image');
@@ -119,6 +130,9 @@ function getColor(event: any) {
 
   const color = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
   console.log(`Color RGB en (${x}, ${y}): ${color}`);
+
+  showColor.value.style.backgroundColor = color;
+  textColor.value = `${hexColor}`;
 }
 
 function rgbToHex(r: number, g: number, b: number): string {
@@ -178,6 +192,11 @@ const removeHidden = () => {
   lens.value.classList.remove('hidden');
 }
 
+const copyColor = () => {
+  const color = textColor.value;
+  navigator.clipboard.writeText(color);
+}
+
 function closeToast() {
   showToast.value = false;
 }
@@ -195,5 +214,17 @@ function closeToast() {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* Hacemos que la imagen dentro de color-show aparezca solo si se hace hover en el div y le damos una transición */
+.color-show:hover img {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Hacemos que la imagen dentro de color-show tenga una opacidad de 0 */
+.color-show img {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
 }
 </style>
