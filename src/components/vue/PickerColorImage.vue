@@ -22,9 +22,9 @@
 
       <div class="mt-5 w-full">
         <section class="color-img cursor-crosshair relative">
-          <img ref="uploadImage" src="src/assets/img/test-image.jpg" alt="upload" class="w-full" id="show-image" @mousemove="moveLens" @mouseover="removeHidden">
-          <div ref="lens" id="magnifier-lens-img" class="magnifier-lens absolute w-[150px] h-[100px] border border-black hidden"
-            @click="getColor" @mousemove="moveLens" @mouseout="removeStyle"></div>
+          <img ref="uploadImage" src="src/assets/img/example.jpeg" alt="upload" class="w-full" id="show-image"
+            @mousemove="moveLens" @mouseover="removeHidden" @mouseout="removeStyle" @click="getColor">
+          <div ref="lens" id="magnifier-lens-img" class="magnifier-lens absolute w-[150px] h-[100px] border border-black bg-white hidden"></div>
         </section>
       </div>
     </div>
@@ -137,42 +137,38 @@ function rgbToHex(r: number, g: number, b: number): string {
 }
 
 const moveLens = (event: any) => {
-  let x, y, cx, cy;
-
+  let x, y;
   const uploadImageReact = uploadImage.value.getBoundingClientRect();
-  x = event.x - uploadImageReact.left - lens.value.offsetWidth / 2;
-  y = event.y - uploadImageReact.top - lens.value.offsetHeight / 2;
 
-  let max_xpos = (uploadImageReact.width - lens.value.offsetWidth) + 77;
-  let max_ypos = (uploadImageReact.height - lens.value.offsetHeight) + 65;
-  // console.log(max_xpos, max_ypos, x, y);
+  // Calculate cursor position relative to image
+  x = event.clientX - uploadImageReact.left;
+  y = event.clientY - uploadImageReact.top;
 
-  if (x > max_xpos) x = max_xpos;
-  if (x < -56) x = -56;
+  // Calculate lens position with centered offset
+  const lensOffsetX = lens.value.offsetWidth / 2;
+  const lensOffsetY = lens.value.offsetHeight / 2;
 
-  if (y > max_ypos) y = max_ypos;
-  if (y < -45) y = -45;
+  lens.value.style.cssText = `
+    top: ${y + 10}px;
+    left: ${x + 10}px;
+  `;
 
-  lens.value.style.cssText = `top: ${y}px; left: ${x}px;`;
-
-  // calculamos la imagen magnificada para mostrarla en el lens
-  cx = (lens.value.offsetWidth) / uploadImage.value.offsetWidth * 10;
-  cy = (lens.value.offsetHeight) / uploadImage.value.offsetHeight * 10;
-
-  let xcx = x * cx + 100;
-  xcx = xcx < 0 ? xcx * (-1) : -xcx;
-
-  let ycy = y * cy + 100;
-  ycy = ycy < 0 ? ycy * (-1) : -ycy;
+  // calculamos las dimensiones de la imagen ampliada
+  const magnification = (lens.value.offsetWidth) / uploadImage.value.offsetWidth * 10;
 
   lens.value.style.backgroundImage = `url('${uploadImage.value.src}')`;
-  lens.value.style.backgroundSize = `${uploadImage.value.offsetWidth * cx - 30}px ${uploadImage.value.offsetHeight * cy + 20}px`;
-  lens.value.style.backgroundPosition = `${xcx}px ${ycy}px`;
+  lens.value.style.backgroundSize = `${uploadImage.value.offsetWidth * magnification}px ${uploadImage.value.offsetHeight * magnification}px`;
+
+  // calculamos la posición del background para la vista ampliada
+  const magnifiedX = x * magnification;
+  const magnifiedY = y * magnification;
+
+  lens.value.style.backgroundPosition = `${(magnifiedX - lensOffsetX) * (-1)}px ${(magnifiedY - lensOffsetY) * (-1)}px`;
   lens.value.style.backgroundRepeat = 'no-repeat';
 
-  // dibujamos un punto en el centro del lens
+  // dibujamos el punto en el centro del lente
   lens.value.innerHTML = '<div class="magnifier-dot"></div>';
-}
+};
 
 const removeStyle = () => {
   lens.value.style.display = 'none';
