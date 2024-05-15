@@ -1,13 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+import CustomTabs from '../components/vue/CustomTabs.vue';
+import PickerColorImage from '../components/vue/PickerColorImage.vue';
 ---
 
 <Layout title="What Is This Color">
 	<main class="container mx-auto px-5">
 		<!-- Sección presentación de opciones -->
-		<section>
-			<article class="my-20 text-lg">
+		<section class="my-20">
+			<article class="text-lg">
 				<h1 class="text-4xl font-bold text-slate-600">Cuál es este color</h1>
 				<p class="text-slate-500">Elige alguna de las 3 opciones que necesites:</p>
 	
@@ -31,8 +33,10 @@ import Card from '../components/Card.astro';
 		</section>
 
 		<!-- Sección Tab con las 3 opciones -->
-		<section>
-			
+		<section class="mb-20">
+			<CustomTabs client:visible>
+				<PickerColorImage client:only="vue" slot="tab-1" />
+			</CustomTabs>
 		</section>
 	</main>
 </Layout>
