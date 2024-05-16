@@ -1,6 +1,5 @@
 <template>
   <div class="bg-white rounded-md py-10 px-2 sm:px-0 flex justify-center items-center">
-    <Toast v-if="showToast" :message="toastMessage" @close="closeToast"/>
     <section class="max-w-96 sm:max-w-[570px] w-full border-2 p-3 rounded-md">
       <div class="rounded-sm border-2 border-dashed cursor-pointer"
            @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="drop" @click="openFile">
@@ -42,13 +41,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import Toast from './Toast.vue';
+import { useToast } from "vue-toastification";
 
-let toastMessage = ref('');
-let showToast = ref(false);
 let isDragging = ref(false);
 let textColor = ref('');
 
+const toast = useToast();
 const uploadImage = ref(document.createElement('img'));
 const lens = ref(document.createElement('div'));
 const showColor = ref(document.createElement('div'));
@@ -64,8 +62,7 @@ function loadImage() {
   if (input.files && input.files[0]) {
     // validamos que sea una imagen
     if (!input.files[0].type.includes('image')) {
-      toastMessage.value = 'El archivo seleccionado no es una imagen';
-      showToast.value = true;
+      toast.error('El archivo seleccionado no es una imagen', {timeout: 4000});
 
       // limpiamos el input
       input.value = '';
@@ -93,8 +90,7 @@ function drop(event: any) {
 
   // validamos que sea una imagen
   if (!file.type.includes('image')) {
-    toastMessage.value = 'El archivo seleccionado no es una imagen';
-    showToast.value = true;
+    toast.error('El archivo seleccionado no es una imagen', {timeout: 4000});
     return;
   }
 
@@ -126,10 +122,8 @@ function getColor(event: any) {
 
   // convertimos el color a hexadecimal
   const hexColor = rgbToHex(pixel[0], pixel[1], pixel[2]);
-  console.log(`Color HEX en (${x}, ${y}): ${hexColor}`);
 
   const color = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
-  console.log(`Color RGB en (${x}, ${y}): ${color}`);
 
   showColor.value.style.backgroundColor = color;
   textColor.value = `${hexColor}`;
@@ -195,10 +189,8 @@ const removeHidden = () => {
 const copyColor = () => {
   const color = textColor.value;
   navigator.clipboard.writeText(color);
-}
 
-function closeToast() {
-  showToast.value = false;
+  toast.info('Color copiado al portapapeles', {timeout: 4000});
 }
 
 </script>
