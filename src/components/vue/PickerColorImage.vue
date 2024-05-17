@@ -29,7 +29,7 @@
 
       <div class="mt-6">
         <div ref="showColor" class="color-show w-full h-8 rounded-sm bg-gray-200 cursor-pointer flex justify-center items-center" @click="copyColor">
-          <img class="w-5 hover-change-colo-svg" src="src/assets/icons/clipboard.svg" alt="Sun Icon" />
+          <img class="w-5 hover-change-colo-svg" src="src/assets/icons/clipboard.svg" alt="Sun Icon" loading="lazy"/>
         </div>
         <p class="text-sm text-center mt-1 text-slate-500">
           {{ !textColor ? 'Haz clic en la imagen para esoger un color' : textColor }}

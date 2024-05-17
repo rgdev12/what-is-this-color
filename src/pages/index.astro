@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import CustomTabs from '../components/vue/CustomTabs.vue';
 import PickerColorImage from '../components/vue/PickerColorImage.vue';
+import GettingColors from '../components/vue/GettingColors.vue';
 ---
 
 <Layout title="What Is This Color">
@@ -20,8 +21,8 @@ import PickerColorImage from '../components/vue/PickerColorImage.vue';
 							description="Obten el color de alguna sección en concreto de la imagen que tu cargues."
 						/>
 						<Card
-							title="Color Hexadecimal o RGB"
-							description="Busca un color y obten su valor hexadecimal o RGB para utilizarlo como gustes."
+							title="Color Hexadecimal, RGB y HSL"
+							description="Busca un color y obten su valor hexadecimal, RGB y HSL."
 						/>
 						<Card
 							title="Paleta de colores"
@@ -36,6 +37,7 @@ import PickerColorImage from '../components/vue/PickerColorImage.vue';
 		<section class="mb-20">
 			<CustomTabs client:visible>
 				<PickerColorImage client:only="vue" slot="tab-1" />
+				<GettingColors client:only="vue" slot="tab-2" />
 			</CustomTabs>
 		</section>
 	</main>
