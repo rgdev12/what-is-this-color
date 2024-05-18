@@ -4,6 +4,7 @@ import Card from '../components/Card.astro';
 import CustomTabs from '../components/vue/CustomTabs.vue';
 import PickerColorImage from '../components/vue/PickerColorImage.vue';
 import GettingColors from '../components/vue/GettingColors.vue';
+import ColorPallete from '../components/vue/ColorPallete.vue';
 ---
 
 <Layout title="What Is This Color">
@@ -38,6 +39,7 @@ import GettingColors from '../components/vue/GettingColors.vue';
 			<CustomTabs client:visible>
 				<PickerColorImage client:only="vue" slot="tab-1" />
 				<GettingColors client:only="vue" slot="tab-2" />
+				<ColorPallete client:only="vue" slot="tab-3" />
 			</CustomTabs>
 		</section>
 	</main>
