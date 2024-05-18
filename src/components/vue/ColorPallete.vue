@@ -19,12 +19,13 @@
 
       <div class="mt-6">
         <div v-for="(color, index) in colorPalette" :key="index" :style="{ backgroundColor: color }"
-          class="color-container h-8 hover:h-28 transform transition-all flex items-end"
+          class="color-container h-8 hover:h-28 transform transition-all flex items-end cursor-pointer"
           :class="{
             'rounded-t' : index === 0,
             'rounded-b' : index === colorPalette.length - 1
-          }">
-          <span class="text-white hidden w-max p-1" style="background-color: rgba(57, 57, 57, 0.1)">{{ color }}</span>
+          }"
+          @click="copyColorToClipboar(color)">
+          <span class="text-white hidden w-max p-1" style="background-color: rgba(57, 57, 57, 0.1)">{{ color.toUpperCase() }}</span>
         </div>
       </div>
     </section>
@@ -33,6 +34,9 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 let txtInputColor = ref('#61A9D2');
 let colorInput = ref('#61A9D2');
@@ -108,6 +112,12 @@ function hexToRgb(hex: string) {
 
 function rgbToHex(r: number, g: number, b: number) {
   return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+}
+
+function copyColorToClipboar(color: string) {
+  navigator.clipboard.writeText(color.toUpperCase());
+
+  toast.info('Color copiado al portapapeles');
 }
 </script>
 
